@@ -85,6 +85,7 @@ const css = `
 .gt-label{height:${ROW}px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px;white-space:nowrap;overflow:hidden;border-bottom:1px solid hsl(var(--border) / .5)}
 .gt-label i{width:9px;height:9px;border-radius:50%;flex:none}
 .gt-label b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.gt-label .gt-proj{font-size:11px;font-weight:600;flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;padding:1px 6px;border-radius:4px;background:hsl(var(--muted));color:hsl(var(--muted-foreground))}
 .gt-label span{font-size:11px;color:hsl(var(--muted-foreground));flex:none}
 .gt-canvas{position:relative;flex:none}
 .gt-ruler{height:40px;position:sticky;top:0;z-index:4;background:hsl(var(--background));border-bottom:1px solid hsl(var(--border))}
@@ -208,6 +209,8 @@ function Page({ ctx }) {
     const next = view[Math.min(view.length - 1, Math.max(0, step === Infinity ? view.length - 1 : step === -Infinity ? 0 : at + step))]
     box?.querySelector(`[data-task="${CSS.escape(next.id)}"]`)?.focus()
   }
+  // In "all projects" mode every row names its project, so same-named tasks of two projects can be told apart.
+  const showProject = !project
   const staleError = error && data
   const truncated = (data?.truncated || []).map((s) => t(`status.${s}`)).join(', ')
 
@@ -248,7 +251,7 @@ function Page({ ctx }) {
           h('div', { className: 'gt-labels' },
             h('div', { className: 'gt-head' }, t('table.head')),
             view.map((task) => h('div', { key: task.id, className: 'gt-label', title: task.title },
-              h('i', { style: { background: colorOf(task.agent) } }), h('b', null, task.title), task.agent ? h('span', null, task.agent) : null))),
+              h('i', { style: { background: colorOf(task.agent) } }), showProject && task.project ? h('span', { className: 'gt-proj', title: task.project }, task.project) : null, h('b', null, task.title), task.agent ? h('span', null, task.agent) : null))),
           h('div', { className: 'gt-canvas', style: { width } },
             h('div', { className: 'gt-ruler' },
               ticks.map((k) => h('div', { key: k.t, className: 'gt-tick', style: { left: x(k.t) } }, (k.isDay ? formatter('day') : formatter('time')).format(k.t)))),
