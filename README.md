@@ -76,10 +76,10 @@ timon plugin check .
 
 ## Known limits
 
-- Timon lists at most 1000 tasks per call. The plugin asks status by status, so open tasks are never pushed out
-  by closed ones, and it shows a banner when a status reaches the limit (its newest tasks may then be missing).
-  The limit applies per status, so up to 4000 tasks can be shown; to see more, narrow the period or clear old
-  tasks in Timon.
+- Timon lists at most 1000 tasks per call, sorted by priority (highest first) then age (oldest first). The plugin
+  asks status by status, so open tasks are never pushed out by closed ones, and it shows a banner when a status
+  reaches the limit: the missing tasks are then the most recent ones of low priority. The limit applies per
+  status, so up to 4000 tasks can be shown; to see more, clear old tasks in Timon.
 - A task's first start (`started_at`) is optional and undocumented in Timon. When it equals the last update of a
   closed task it is ignored, because older history copied `updated_at` into it.
 - The project filter uses the project stored on the task; a task whose project only comes from its agent has none.

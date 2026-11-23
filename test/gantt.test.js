@@ -84,7 +84,22 @@ test('listAll asks status by status, excludes mirrors by default and reports a f
   assert.ok(calls.every((c) => !('mirror' in c)))
 })
 
+test('listAll keeps one copy of a task that changed status between two calls', async () => {
+  const kanban = {
+    list: async ({ status }) => (status === 'PENDING' || status === 'IN_PROGRESS'
+      ? [{ id: 'moved', status }, { id: `only-${status}`, status }]
+      : []),
+  }
+  const { rows } = await listAll(kanban)
+  assert.deepEqual(rows.map((r) => r.id).sort(), ['moved', 'only-IN_PROGRESS', 'only-PENDING'])
+  assert.equal(rows.find((r) => r.id === 'moved').status, 'IN_PROGRESS')
+})
+
 test('statusOfError does not report a refusal as a gateway error', () => {
+  const named = (name) => Object.assign(new Error('x'), { name })
+  assert.equal(statusOfError(named('PluginPermissionError')), 403)
+  assert.equal(statusOfError(named('PluginCallerError')), 403)
+  assert.equal(statusOfError({ code: 'unavailable' }), 503)
   assert.equal(statusOfError({ code: 'forbidden' }), 403)
   assert.equal(statusOfError({ code: 'not_found' }), 404)
   assert.equal(statusOfError({ code: 'invalid' }), 400)
