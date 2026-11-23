@@ -24,7 +24,7 @@ The official Kanban view cannot be extended with another display mode, so this i
 ## Requirements
 
 - Timon with plugin API **15** or later (the page uses `@timon/ui`'s `NavLink` and `createTranslator`).
-- Node.js 20 or later, only to run the tests or to rebuild the page.
+- Node.js 20 or later (the tests run with `node --test`, which works on 20 and newer), only to run the tests or to rebuild the page.
 - **Developer mode**: this plugin is not signed, and Timon loads an unsigned plugin only in developer mode.
   Turn it on in *Settings › Plugins › Developer mode* (superadmin), or in `timon.config.json`
   (takes effect after a restart):
@@ -78,6 +78,10 @@ timon plugin check .
 
 - Timon lists at most 1000 tasks per call. The plugin asks status by status, so open tasks are never pushed out
   by closed ones, and it shows a banner when a status reaches the limit (its newest tasks may then be missing).
+  The limit applies per status, so up to 4000 tasks can be shown; to see more, narrow the period or clear old
+  tasks in Timon.
+- A task's first start (`started_at`) is optional and undocumented in Timon. When it equals the last update of a
+  closed task it is ignored, because older history copied `updated_at` into it.
 - The project filter uses the project stored on the task; a task whose project only comes from its agent has none.
 - Agent colours are stable for a given set of agents; adding an agent can move the colour of one that collided.
 
