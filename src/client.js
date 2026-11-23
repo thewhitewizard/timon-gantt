@@ -215,7 +215,6 @@ function Page({ ctx }) {
     box?.querySelector(`[data-task="${CSS.escape(next.id)}"]`)?.focus()
   }
   // In "all projects" mode every row names its project, so same-named tasks of two projects can be told apart.
-  const showProject = !project
   const staleError = error && data
   const truncated = (data?.truncated || []).map((s) => t(`status.${s}`)).join(', ')
 
@@ -255,8 +254,8 @@ function Page({ ctx }) {
         h('div', { className: 'gt-inner' },
           h('div', { className: 'gt-labels' },
             h('div', { className: 'gt-head' }, t('table.head')),
-            view.map((task) => h('div', { key: task.id, className: 'gt-label', title: showProject && task.project ? `${task.project} · ${task.title}` : task.title },
-              h('i', { style: { background: colorOf(task.agent) } }), showProject && task.project ? h('span', { className: 'gt-proj', title: task.project }, task.project) : null, h('b', null, task.title), task.agent ? h('span', null, task.agent) : null))),
+            view.map((task) => h('div', { key: task.id, className: 'gt-label', title: task.project ? `${task.project} · ${task.title}` : task.title },
+              h('i', { style: { background: colorOf(task.agent) } }), task.project ? h('span', { className: 'gt-proj', title: task.project }, task.project) : null, h('b', null, task.title), task.agent ? h('span', null, task.agent) : null))),
           h('div', { className: 'gt-canvas', style: { width } },
             h('div', { className: 'gt-ruler' },
               ticks.map((k) => h('div', { key: k.t, className: 'gt-tick', style: { left: x(k.t) } }, (k.isDay ? formatter('day') : formatter('time')).format(k.t)))),
