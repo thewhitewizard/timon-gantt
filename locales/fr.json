@@ -1,0 +1,75 @@
+{
+  "title": "Gantt",
+  "nav": "Gantt",
+  "filters": {
+    "period": "Période",
+    "project": "Projet",
+    "agent": "Agent",
+    "scale": "Échelle",
+    "allProjects": "Tous les projets",
+    "allAgents": "Tous les agents",
+    "scaleOption": "Échelle : {name}",
+    "compress": "Réduire les temps morts",
+    "hideMirrors": "Masquer les tickets miroirs",
+    "refresh": "Actualiser"
+  },
+  "span": {
+    "5m": "5 dernières minutes",
+    "15m": "15 dernières minutes",
+    "30m": "30 dernières minutes",
+    "1h": "Dernière heure",
+    "6h": "6 dernières heures",
+    "12h": "12 dernières heures",
+    "24h": "24 dernières heures",
+    "2d": "2 derniers jours",
+    "7d": "7 derniers jours",
+    "30d": "30 derniers jours",
+    "all": "Tout l’historique"
+  },
+  "scale": {
+    "fit": "Ajustée",
+    "tight": "Serrée",
+    "normal": "Normale",
+    "wide": "Large"
+  },
+  "status": {
+    "PENDING": "En attente",
+    "IN_PROGRESS": "En cours",
+    "DONE": "Terminée",
+    "BLOCKED": "Bloquée"
+  },
+  "legend": {
+    "status": "Statut",
+    "agents": "Agents",
+    "count": "{count, plural, one {# tâche} other {# tâches}}",
+    "filterOn": "Afficher seulement {agent}",
+    "showAll": "Afficher tous les agents"
+  },
+  "table": {
+    "head": "Tâche · agent",
+    "now": "Maintenant",
+    "loading": "Chargement…",
+    "empty": "Aucune tâche sur cette période avec ces filtres.",
+    "error": "Les tâches n’ont pas pu être chargées : {message}",
+    "staleError": "Le dernier rafraîchissement a échoué ({message}). Le graphique montre les données précédentes.",
+    "truncated": "Des tâches peuvent manquer : Timon liste au plus {limit} tâches par statut (limite atteinte pour : {statuses})."
+  },
+  "bar": {
+    "created": "Créée : {when}",
+    "started": "Démarrée : {when}",
+    "openSince": "Ouverte depuis {duration}",
+    "closed": "Dernière mise à jour : {when} ({duration} après la création)",
+    "queued": "A attendu {duration} avant de démarrer"
+  },
+  "break": {
+    "label": "⋯ {idle}",
+    "title": "{idle} sans activité"
+  },
+  "duration": {
+    "under": "< 1 min",
+    "minutes": "{minutes} min",
+    "hours": "{hours} h {minutes}",
+    "days": "{days} j {hours} h"
+  },
+  "note": "Lecture seule. Une barre va du début de la tâche à sa dernière mise à jour (jusqu’à maintenant tant qu’elle est ouverte) : c’est le temps écoulé, pas le temps de travail de l’agent. Une bande pâle avant une barre est l’attente dans la file. Les flèches relient une tâche à celles qui en dépendent. Zones grisées : de 22 h à 6 h."
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@thewhitewizard/plugin-gantt",
+  "version": "0.1.0",
+  "description": "A read-only Gantt timeline for the Timon Kanban: one bar per task, dependency arrows, a colour per agent, a Grafana-style period picker.",
+  "keywords": ["timon", "timon-plugin", "kanban", "gantt", "timeline"],
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": { ".": "./lib/index.js", "./client": "./lib/client.js" },
+  "files": ["lib", "locales", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "esbuild src/client.js --bundle --format=esm --target=es2022 --outfile=lib/client.js --external:react --external:@timon/ui --legal-comments=none",
+    "test": "node --test \"test/*.test.js\"",
+    "check": "npm run build && npm test"
+  },
+  "author": "thewhitewizard",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/thewhitewizard/timon-gantt.git" },
+  "bugs": { "url": "https://github.com/thewhitewizard/timon-gantt/issues" },
+  "homepage": "https://github.com/thewhitewizard/timon-gantt#readme",
+  "engines": { "node": ">=20" },
+  "devDependencies": { "esbuild": "^0.28.0" },
+  "timon": {
+    "id": "gantt",
+    "apiVersion": 15,
+    "kind": ["page"],
+    "route": "/gantt",
+    "label": "Gantt",
+    "description": "Timeline of the Kanban tasks (read only): one bar per task, dependency arrows, a colour per agent, filters by project, agent and status.",
+    "author": "thewhitewizard",
+    "permissions": ["kanban:read"],
+    "client": { "slots": ["nav.item", "page"], "external": ["react", "@timon/ui"] },
+    "settings": []
+  }
+}

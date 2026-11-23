@@ -1,0 +1,75 @@
+{
+  "title": "Gantt",
+  "nav": "Gantt",
+  "filters": {
+    "period": "Period",
+    "project": "Project",
+    "agent": "Agent",
+    "scale": "Scale",
+    "allProjects": "All projects",
+    "allAgents": "All agents",
+    "scaleOption": "Scale: {name}",
+    "compress": "Collapse idle time",
+    "hideMirrors": "Hide mirrored tickets",
+    "refresh": "Refresh"
+  },
+  "span": {
+    "5m": "Last 5 minutes",
+    "15m": "Last 15 minutes",
+    "30m": "Last 30 minutes",
+    "1h": "Last hour",
+    "6h": "Last 6 hours",
+    "12h": "Last 12 hours",
+    "24h": "Last 24 hours",
+    "2d": "Last 2 days",
+    "7d": "Last 7 days",
+    "30d": "Last 30 days",
+    "all": "All history"
+  },
+  "scale": {
+    "fit": "Fit",
+    "tight": "Tight",
+    "normal": "Normal",
+    "wide": "Wide"
+  },
+  "status": {
+    "PENDING": "Pending",
+    "IN_PROGRESS": "In progress",
+    "DONE": "Done",
+    "BLOCKED": "Blocked"
+  },
+  "legend": {
+    "status": "Status",
+    "agents": "Agents",
+    "count": "{count, plural, one {# task} other {# tasks}}",
+    "filterOn": "Show only {agent}",
+    "showAll": "Show all agents"
+  },
+  "table": {
+    "head": "Task · agent",
+    "now": "Now",
+    "loading": "Loading…",
+    "empty": "No task in this period with these filters.",
+    "error": "The tasks could not be loaded: {message}",
+    "staleError": "The last refresh failed ({message}). The chart shows the previous data.",
+    "truncated": "Some tasks may be missing: Timon lists at most {limit} tasks per status (reached for: {statuses})."
+  },
+  "bar": {
+    "created": "Created: {when}",
+    "started": "Started: {when}",
+    "openSince": "Open for {duration}",
+    "closed": "Last update: {when} ({duration} after creation)",
+    "queued": "Waited {duration} before starting"
+  },
+  "break": {
+    "label": "⋯ {idle}",
+    "title": "{idle} without activity"
+  },
+  "duration": {
+    "under": "< 1 min",
+    "minutes": "{minutes} min",
+    "hours": "{hours} h {minutes}",
+    "days": "{days} d {hours} h"
+  },
+  "note": "Read only. A bar runs from the task's start to its last update (up to now while it is open): this is elapsed time, not the time an agent spent working. A pale strip before a bar is the wait in the queue. Arrows link a task to the tasks that depend on it. Shaded areas: 10 pm to 6 am."
+}
