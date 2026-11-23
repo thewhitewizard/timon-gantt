@@ -54,6 +54,16 @@ test('startedAt is kept only when it lies between creation and the end', () => {
   assert.deepEqual(by, { ok: 200, before: null, after: null, none: null })
 })
 
+test('startedAt equal to the last update of a closed task is treated as inherited and dropped', () => {
+  const rows = normalizeTasks([
+    { id: 'old', status: 'DONE', created_at: 100, started_at: 300, updated_at: 300 },
+    { id: 'real', status: 'DONE', created_at: 100, started_at: 200, updated_at: 300 },
+    { id: 'open', status: 'IN_PROGRESS', created_at: 100, started_at: 200, updated_at: 200 },
+  ], 1000)
+  const by = Object.fromEntries(rows.map((r) => [r.id, r.startedAt]))
+  assert.deepEqual(by, { old: null, real: 200, open: 200 })
+})
+
 test('listAll asks status by status, excludes mirrors by default and reports a full page', async () => {
   const calls = []
   const kanban = {
