@@ -84,9 +84,10 @@ const css = `
 .gt-head{height:40px;position:sticky;top:0;z-index:6;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid hsl(var(--border));font-size:12px;color:hsl(var(--muted-foreground));background:hsl(var(--background))}
 .gt-label{height:${ROW}px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px;white-space:nowrap;overflow:hidden;border-bottom:1px solid hsl(var(--border) / .5)}
 .gt-label i{width:9px;height:9px;border-radius:50%;flex:none}
-.gt-label b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
-.gt-label .gt-proj{font-size:11px;font-weight:600;flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;padding:1px 6px;border-radius:4px;background:hsl(var(--muted));color:hsl(var(--muted-foreground))}
-.gt-label span{font-size:11px;color:hsl(var(--muted-foreground));flex:none}
+.gt-label b{font-weight:500;flex:1 1 45%;min-width:3em;overflow:hidden;text-overflow:ellipsis}
+.gt-label .gt-proj{font-size:11px;font-weight:600;flex:0 1 auto;min-width:0;max-width:30%;overflow:hidden;text-overflow:ellipsis;padding:1px 6px;border-radius:4px;background:hsl(var(--muted));color:hsl(var(--muted-foreground))}
+.gt-label span{font-size:11px;color:hsl(var(--muted-foreground));flex:0 1 auto;min-width:0;max-width:30%;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:760px){.gt-label .gt-proj{display:none}}
 .gt-canvas{position:relative;flex:none}
 .gt-ruler{height:40px;position:sticky;top:0;z-index:4;background:hsl(var(--background));border-bottom:1px solid hsl(var(--border))}
 .gt-tick{position:absolute;top:0;bottom:0;border-left:1px solid hsl(var(--border));font-size:11px;padding:3px 0 0 4px;color:hsl(var(--muted-foreground));white-space:nowrap}
@@ -250,7 +251,7 @@ function Page({ ctx }) {
         h('div', { className: 'gt-inner' },
           h('div', { className: 'gt-labels' },
             h('div', { className: 'gt-head' }, t('table.head')),
-            view.map((task) => h('div', { key: task.id, className: 'gt-label', title: task.title },
+            view.map((task) => h('div', { key: task.id, className: 'gt-label', title: showProject && task.project ? `${task.project} · ${task.title}` : task.title },
               h('i', { style: { background: colorOf(task.agent) } }), showProject && task.project ? h('span', { className: 'gt-proj', title: task.project }, task.project) : null, h('b', null, task.title), task.agent ? h('span', null, task.agent) : null))),
           h('div', { className: 'gt-canvas', style: { width } },
             h('div', { className: 'gt-ruler' },
