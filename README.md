@@ -12,7 +12,7 @@ Kanban in the side menu.
 - **Scales**: *Fit* (the drawn time fills the page, the default) or a fixed *Tight*, *Normal* or *Wide*.
 - **Collapse idle time** (on by default): stretches with no activity become narrow hatched breaks labelled with
   their real length, so a day of work is not lost in a month of silence.
-- Filters by project, agent and status; mirrored tickets (from GitHub, Linear, Jira…) are hidden by default.
+- Filters by project, agent and status (with all projects shown, each row starts with a project badge); mirrored tickets (from GitHub, Linear, Jira…) are hidden by default.
 - Refreshes every 30 s (paused while the tab is hidden). The interface is in English and French, following
   Timon's language.
 
