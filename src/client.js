@@ -165,6 +165,8 @@ function Page({ ctx }) {
   const all = React.useMemo(() => data?.tasks || [], [data])
   const colors = React.useMemo(() => assignColors(unique(all, 'agent')), [all])
   const colorOf = (name) => colors.get(name) || NO_AGENT
+  // Agents offered in the filter and the legend: only those with tasks in the selected project.
+  const agents = React.useMemo(() => unique(project ? all.filter((task) => task.project === project) : all, 'agent'), [all, project])
   const now = data?.now || Date.now()
   const spanHours = SPANS.find((s) => s.id === span)?.hours || 0
 
@@ -221,10 +223,10 @@ function Page({ ctx }) {
     h('div', { className: 'gt-bar' },
       h('select', { value: span, onChange: (e) => setSpan(e.target.value), 'aria-label': t('filters.period') },
         SPANS.map((s) => h('option', { key: s.id, value: s.id }, t(`span.${s.id}`)))),
-      h('select', { value: project, onChange: (e) => setProject(e.target.value), 'aria-label': t('filters.project') },
+      h('select', { value: project, onChange: (e) => { setProject(e.target.value); setAgent('') }, 'aria-label': t('filters.project') },
         h('option', { value: '' }, t('filters.allProjects')), unique(all, 'project').map((p) => h('option', { key: p, value: p }, p))),
       h('select', { value: agent, onChange: (e) => setAgent(e.target.value), 'aria-label': t('filters.agent') },
-        h('option', { value: '' }, t('filters.allAgents')), unique(all, 'agent').map((a) => h('option', { key: a, value: a }, a))),
+        h('option', { value: '' }, t('filters.allAgents')), agents.map((a) => h('option', { key: a, value: a }, a))),
       h('select', { value: zoom, onChange: (e) => setZoom(Number(e.target.value)), 'aria-label': t('filters.scale') },
         SCALES.map((s) => h('option', { key: s.id, value: s.v }, t('filters.scaleOption', { name: t(`scale.${s.id}`) })))),
       h('label', null, h('input', { type: 'checkbox', checked: compress, onChange: (e) => setCompress(e.target.checked) }), ` ${t('filters.compress')}`),
@@ -237,7 +239,7 @@ function Page({ ctx }) {
           h('i', { className: `gt-sw ${s}` }), t(`status.${s}`))),
       h('span', null, t('legend.count', { count: view.length }))),
     h('div', { className: 'gt-legend', role: 'group', 'aria-label': t('legend.agents') },
-      unique(all, 'agent').map((a) =>
+      agents.map((a) =>
         h('button', {
           key: a, className: 'gt-chip', 'aria-pressed': agent === a, onClick: () => setAgent(agent === a ? '' : a),
           title: agent === a ? t('legend.showAll') : t('legend.filterOn', { agent: a }),
