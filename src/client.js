@@ -118,7 +118,7 @@ function Page({ ctx }) {
   const [error, setError] = React.useState('')
   const [span, setSpan] = React.useState('24h')
   const [project, setProject] = React.useState('')
-  const [agent, setAgent] = React.useState('')
+  const [pickedAgent, setAgent] = React.useState('')
   const [statuses, setStatuses] = React.useState(() => new Set(STATUSES))
   const [hideMirror, setHideMirror] = React.useState(true)
   const [compress, setCompress] = React.useState(true)
@@ -167,6 +167,8 @@ function Page({ ctx }) {
   const colorOf = (name) => colors.get(name) || NO_AGENT
   // Agents offered in the filter and the legend: only those with tasks in the selected project.
   const agents = React.useMemo(() => unique(project ? all.filter((task) => task.project === project) : all, 'agent'), [all, project])
+  // A selected agent that is no longer offered (refresh, project change) stops filtering.
+  const agent = agents.includes(pickedAgent) ? pickedAgent : ''
   const now = data?.now || Date.now()
   const spanHours = SPANS.find((s) => s.id === span)?.hours || 0
 
