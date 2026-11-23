@@ -63,13 +63,14 @@
   },
   "break": {
     "label": "⋯ {idle}",
-    "title": "{idle} without activity"
+    "title": "{idle} without activity",
+    "titleBusy": "{idle} compressed: a task is still running"
   },
   "duration": {
     "under": "< 1 min",
     "minutes": "{minutes} min",
-    "hours": "{hours} h {minutes}",
-    "days": "{days} d {hours} h"
+    "hours": "{hours}h {minutes}m",
+    "days": "{days}d {hours}h"
   },
   "note": "Read only. A bar runs from the task's start to its last update (up to now while it is open): this is elapsed time, not the time an agent spent working. A pale strip before a bar is the wait in the queue. Arrows link a task to the tasks that depend on it. Shaded areas: 10 pm to 6 am."
 }

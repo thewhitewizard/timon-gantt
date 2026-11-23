@@ -7,7 +7,7 @@ Kanban in the side menu.
   while it is open. A pale strip before a bar is the time the task waited in the queue.
 - **Dependency arrows** from a task to the tasks that depend on it.
 - **One colour per agent** (click an agent chip to filter on it); the status is in the bar style: solid = done,
-  striped = in progress, pale = pending, orange outline = blocked.
+  striped = in progress, pale = pending, orange ring around the bar = blocked.
 - **Grafana-style period picker**: last 5, 15, 30 minutes, 1, 6, 12, 24 hours, 2, 7, 30 days, or all history.
 - **Scales**: *Fit* (the drawn time fills the page, the default) or a fixed *Tight*, *Normal* or *Wide*.
 - **Collapse idle time** (on by default): stretches with no activity become narrow hatched breaks labelled with

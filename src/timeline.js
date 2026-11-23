@@ -13,7 +13,7 @@ export const SOLID_MAX = 6 * HOUR
 // Hues of the BLOCKED outline (orange) and of the "now" line (red) are left out on purpose.
 export const AGENT_PALETTE = [
   '#2563eb', '#db2777', '#16a34a', '#7c3aed', '#0891b2', '#65a30d',
-  '#c026d3', '#0d9488', '#4f46e5', '#0ea5e9', '#a16207', '#475569',
+  '#c026d3', '#0d9488', '#4f46e5', '#0ea5e9', '#0369a1', '#475569',
 ]
 export const NO_AGENT = '#94a3b8'
 
@@ -124,13 +124,21 @@ export function makeX(segments, pxPerHour) {
   }
 }
 
-/** The collapsed stretches: where to draw them and how long they really were. */
-export function buildBreaks(segments, x) {
-  return segments.slice(1).map((s, i) => ({
-    left: x(segments[i].b),
-    width: BREAK_W,
-    idle: Math.max(0, s.ra - segments[i].rb),
-  }))
+/**
+ * The collapsed stretches: where to draw them and how long they really were.
+ * `busy` is true when a task longer than SOLID_MAX runs across the whole break: it is not idle time then,
+ * only time with no event. `view` rows: `{ start, end }`.
+ */
+export function buildBreaks(segments, x, view = []) {
+  return segments.slice(1).map((s, i) => {
+    const prev = segments[i]
+    return {
+      left: x(prev.b),
+      width: BREAK_W,
+      idle: Math.max(0, s.ra - prev.rb),
+      busy: view.some((t) => t.start <= prev.rb && t.end >= s.ra),
+    }
+  })
 }
 
 const STEPS_MIN = [1, 2, 5, 10, 15, 30, 60, 120, 180, 360, 720, 1440]
@@ -199,7 +207,9 @@ export function buildArrows(rows, x, { row, barHalf = 9 }) {
       const ce = Math.max(x(child.end), cs + 8)
       let d
       if (x1 + 4 <= cs) {
-        const mid = Math.max(x1 + 8, cs - 8)
+        // Close to the child the elbow sits halfway, so the line never overshoots the bar and comes back.
+        const gap = cs - x1
+        const mid = gap >= 16 ? cs - 8 : x1 + gap / 2
         d = `M${x1} ${y1} H${mid} V${y2} H${cs}`
       } else {
         const tx = Math.min(x1, ce)
