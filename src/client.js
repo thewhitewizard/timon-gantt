@@ -125,6 +125,7 @@ function Page({ ctx }) {
   const [size, setSize] = React.useState({ vw: 1000, labelW: 280 })
   const scrolledFor = React.useRef('')
   const requestId = React.useRef(0)
+  const [focusId, setFocusId] = React.useState('')
 
   // Several requests can overlap (a poll and a click on Refresh): only the latest one is kept.
   const load = React.useCallback(async () => {
@@ -181,7 +182,7 @@ function Page({ ctx }) {
     [view, now, t0, end, pad, compress])
   const pxPerHour = zoom || fitPxPerHour(rawSegments, size.vw - size.labelW)
   const { segments, width, x } = layout(rawSegments, pxPerHour)
-  const breaks = buildBreaks(segments, x)
+  const breaks = buildBreaks(segments, x, view)
   const ticks = buildTicks(segments, pxPerHour)
   const nights = buildNights(segments)
   const arrows = buildArrows(view, x, { row: ROW, barHalf: BAR_H / 2 })
@@ -189,13 +190,24 @@ function Page({ ctx }) {
   // Show the present (the right end) when the data arrives or the axis changes, not at every poll.
   const axisKey = `${span}|${zoom}|${compress}|${hideMirror}`
   React.useEffect(() => {
-    if (!box || !data || scrolledFor.current === axisKey) return
+    if (!box) { scrolledFor.current = ''; return } // the chart was removed (empty view): scroll again when it is back
+    if (!data || scrolledFor.current === axisKey) return
     box.scrollLeft = box.scrollWidth
     scrolledFor.current = axisKey
   }, [box, data, axisKey])
 
   const toggleStatus = (s) => setStatuses((prev) => { const next = new Set(prev); next.has(s) ? next.delete(s) : next.add(s); return next })
   const bodyH = Math.max(view.length, 1) * ROW
+  // One tab stop for the whole chart: the arrow keys move between the bars.
+  const rovingId = view.some((task) => task.id === focusId) ? focusId : view[0]?.id
+  const moveFocus = (e) => {
+    const step = { ArrowDown: 1, ArrowUp: -1, Home: -Infinity, End: Infinity }[e.key]
+    if (step === undefined) return
+    e.preventDefault()
+    const at = view.findIndex((task) => task.id === e.currentTarget.dataset.task)
+    const next = view[Math.min(view.length - 1, Math.max(0, step === Infinity ? view.length - 1 : step === -Infinity ? 0 : at + step))]
+    box?.querySelector(`[data-task="${CSS.escape(next.id)}"]`)?.focus()
+  }
   const staleError = error && data
   const truncated = (data?.truncated || []).map((s) => t(`status.${s}`)).join(', ')
 
@@ -242,7 +254,7 @@ function Page({ ctx }) {
               ticks.map((k) => h('div', { key: k.t, className: 'gt-tick', style: { left: x(k.t) } }, (k.isDay ? formatter('day') : formatter('time')).format(k.t)))),
             nights.map((n) => h('div', { key: `n${n.from}`, className: 'gt-night', style: { left: x(n.from), width: x(n.to) - x(n.from) } })),
             ticks.map((k) => h('div', { key: `g${k.t}`, className: 'gt-grid', style: { left: x(k.t) } })),
-            breaks.map((b) => h('div', { key: `b${b.left}`, className: 'gt-break', style: { left: b.left, width: b.width }, title: t('break.title', { idle: duration(b.idle) }) },
+            breaks.map((b) => h('div', { key: `b${b.left}`, className: 'gt-break', style: { left: b.left, width: b.width }, title: t(b.busy ? 'break.titleBusy' : 'break.title', { idle: duration(b.idle) }) },
               h('span', null, t('break.label', { idle: duration(b.idle) })))),
             h('div', { className: 'gt-rows', style: { height: bodyH } },
               view.map((task, i) => h('div', { key: `r${task.id}`, className: 'gt-rowbg', style: { top: i * ROW } })),
@@ -262,7 +274,7 @@ function Page({ ctx }) {
                     : null,
                   h('div', {
                     className: `gt-task${task.status === 'IN_PROGRESS' ? ' live' : ''}`,
-                    role: 'img', tabIndex: 0, 'aria-label': text.replace(/\n/g, '. '), title: text,
+                    role: 'img', tabIndex: task.id === rovingId ? 0 : -1, 'data-task': task.id, onFocus: () => setFocusId(task.id), onKeyDown: moveFocus, 'aria-label': text.replace(/\n/g, '. '), title: text,
                     style: { left, width: Math.max(8, x(task.end) - left), top, background: color, opacity: task.status === 'PENDING' ? 0.45 : 1, ...(task.status === 'BLOCKED' ? { boxShadow: '0 0 0 2px #d97706' } : null) },
                   }))
               }),

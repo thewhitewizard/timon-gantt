@@ -63,7 +63,8 @@
   },
   "break": {
     "label": "⋯ {idle}",
-    "title": "{idle} sans activité"
+    "title": "{idle} sans activité",
+    "titleBusy": "{idle} compressées : une tâche est toujours en cours"
   },
   "duration": {
     "under": "< 1 min",

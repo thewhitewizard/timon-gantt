@@ -103,6 +103,28 @@ test('arrows: forward elbow when the child starts after the parent, a drop when 
   assert.ok(endY < 2 * 32 + 16)
 })
 
+test('arrows: a child starting 4 to 16 px after the parent end never makes the line overshoot', () => {
+  const x = (t) => t
+  for (const gap of [4, 5, 8, 12, 15.9, 16, 40]) {
+    const parent = { id: 'p', start: 0, end: 100, deps: [] }
+    const child = { id: 'c', start: 100 + gap, end: 400, deps: ['p'] }
+    const [a] = buildArrows([parent, child], x, { row: 32 })
+    const [, mid] = a.d.match(/H([0-9.]+) V/)
+    assert.ok(Number(mid) >= 100 && Number(mid) <= 100 + gap, `gap ${gap}: elbow at ${mid}`)
+  }
+})
+
+test('a break is busy when a long task runs across it, idle otherwise', () => {
+  const long = task('long', -30, 0)
+  const raw = buildSegments([task('a', -20, -19.9), task('b', -2, -1.9), long], opts())
+  const { segments, x } = layout(raw, 100)
+  assert.equal(raw.length > 1, true)
+  const busy = buildBreaks(segments, x, [long])
+  assert.ok(busy.every((b) => b.busy))
+  const idle = buildBreaks(segments, x, [task('a', -20, -19.9), task('b', -2, -1.9)])
+  assert.ok(idle.every((b) => !b.busy))
+})
+
 test('colours: no two agents share one while the palette lasts, and the result does not depend on input order', () => {
   const names = ['dev-alpha', 'dev-beta', 'doc-beta', 'lead-alpha', 'lead-beta', 'po-alpha', 'qa-alpha', 'review-beta', 'sre-alpha']
   const a = assignColors(names)

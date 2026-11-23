@@ -7,7 +7,7 @@ Kanban in the side menu.
   while it is open. A pale strip before a bar is the time the task waited in the queue.
 - **Dependency arrows** from a task to the tasks that depend on it.
 - **One colour per agent** (click an agent chip to filter on it); the status is in the bar style: solid = done,
-  striped = in progress, pale = pending, orange outline = blocked.
+  striped = in progress, pale = pending, orange ring around the bar = blocked.
 - **Grafana-style period picker**: last 5, 15, 30 minutes, 1, 6, 12, 24 hours, 2, 7, 30 days, or all history.
 - **Scales**: *Fit* (the drawn time fills the page, the default) or a fixed *Tight*, *Normal* or *Wide*.
 - **Collapse idle time** (on by default): stretches with no activity become narrow hatched breaks labelled with
@@ -24,7 +24,7 @@ The official Kanban view cannot be extended with another display mode, so this i
 ## Requirements
 
 - Timon with plugin API **15** or later (the page uses `@timon/ui`'s `NavLink` and `createTranslator`).
-- Node.js 20 or later, only to run the tests or to rebuild the page.
+- Node.js 20 or later (the tests run with `node --test`, which works on 20 and newer), only to run the tests or to rebuild the page.
 - **Developer mode**: this plugin is not signed, and Timon loads an unsigned plugin only in developer mode.
   Turn it on in *Settings › Plugins › Developer mode* (superadmin), or in `timon.config.json`
   (takes effect after a restart):
@@ -76,8 +76,12 @@ timon plugin check .
 
 ## Known limits
 
-- Timon lists at most 1000 tasks per call. The plugin asks status by status, so open tasks are never pushed out
-  by closed ones, and it shows a banner when a status reaches the limit (its newest tasks may then be missing).
+- Timon lists at most 1000 tasks per call, sorted by priority (highest first) then age (oldest first). The plugin
+  asks status by status, so open tasks are never pushed out by closed ones, and it shows a banner when a status
+  reaches the limit: the missing tasks are then the most recent ones of low priority. The limit applies per
+  status, so up to 4000 tasks can be shown; to see more, clear old tasks in Timon.
+- A task's first start (`started_at`) is optional and undocumented in Timon. When it equals the last update of a
+  closed task it is ignored, because older history copied `updated_at` into it.
 - The project filter uses the project stored on the task; a task whose project only comes from its agent has none.
 - Agent colours are stable for a given set of agents; adding an agent can move the colour of one that collided.
 
