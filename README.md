@@ -3,7 +3,8 @@
 A read-only Gantt timeline for the [Timon](https://timon-ai.com) Kanban. It adds a **Gantt** page next to the
 Kanban in the side menu.
 
-![The Gantt page: a plan task, its review, its merge and a later review, with dependency arrows and a colour per agent](docs/screenshot.png)
+![The Gantt page: a plan task, its review, its merge and a later review,
+with dependency arrows and a colour per agent](docs/screenshot.png)
 
 - **One bar per task**, from its creation (or first start, when Timon reports it) to its last update, or to *now*
   while it is open. A pale strip before a bar is the time the task waited in the queue.
