@@ -9,7 +9,7 @@
   "files": ["lib", "locales", "README.md", "LICENSE"],
   "scripts": {
     "build": "esbuild src/client.js --bundle --format=esm --target=es2022 --outfile=lib/client.js --external:react --external:@timon/ui --legal-comments=none",
-    "test": "node --test \"test/*.test.js\"",
+    "test": "node --test",
     "check": "npm run build && npm test"
   },
   "author": "thewhitewizard",
